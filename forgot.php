@@ -15,7 +15,7 @@ function reset_password_mail( $email, $psw_forgot_token ) {
     $mail->Host       = 'smtp.gmail.com';
     $mail->SMTPAuth   = true;
     $mail->Username   = 'sifoda2107@gmail.com';
-    $mail->Password   = 'sdxtgodwjdeucijx';
+    $mail->Password   = 'sdxtgodwjssssdeucijxdsdss';
     $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
     $mail->Port       = 587;
 
