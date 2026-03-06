@@ -191,11 +191,6 @@ $mail->Port       = 587;
 
 ---
 
-## 📄 Licence
-
-Ce projet est sous licence **MIT** — consultez le fichier [LICENSE](LICENSE) pour plus de détails.
-
----
 
 <div align="center">
   Fait avec ❤️ par <strong>SEYF</strong>
