@@ -40,50 +40,6 @@ Un système d'authentification complet et sécurisé développé en PHP. Ce proj
 ### 1. Base de Données
 Créez une DB nommée `auth` et exécutez le script SQL suivant :
 
-```sql
-CREATE TABLE `informations` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(191) NOT NULL,
-  `email` varchar(191) NOT NULL,
-  `phone` varchar(20) NOT NULL,
-  `pass` varchar(191) NOT NULL,
-  `psw_repeat` varchar(191) NOT NULL,
-  `verify_token` varchar(191) DEFAULT NULL,
-  `psw_verify_token` varchar(191) DEFAULT NULL,
-  `verify_status` tinyint(2) NOT NULL DEFAULT 0 COMMENT '0=non vérifié, 1=vérifié',
-  PRIMARY KEY (`id`)
-) 
-2. Paramètres de Connexion
-Configurez votre fichier connexion.php :
-
-PHP
-$host = 'localhost';
-$user = 'root';
-$pass = ''; // Votre mot de passe
-$db   = 'auth';
-3. Installation de PHPMailer
-Lancez la commande suivante à la racine du projet :
-
-Bash
-composer require phpmailer/phpmailer
-[!IMPORTANT]
-N'oubliez pas de mettre à jour vos identifiants Gmail (Email + App Password) dans code.php et forgot.php.
-
-📂 Structure du Projet
-Plaintext
-├── include/              # Composants UI (header, navbar, footer)
-├── vendor/               # Dépendances Composer (PHPMailer)
-├── index.php             # Page d'accueil
-├── register.php          # Inscription
-├── login.php             # Connexion
-├── code.php              # Logique Backend (Traitement POST)
-├── verify-email.php      # Validation du token e-mail
-├── forgot.php            # Demande de reset password
-├── reset-password.php    # Formulaire nouveau password
-└── Dashboard.php         # Espace membre sécurisé
-🛡️ Sécurité Implémentée
-Anti-Injection SQL : Utilisation systématique des requêtes préparées.
-
-Tokens MD5 : Génération de jetons uniques pour la validation et la récupération.
-
-Double Vérification : Connexion impossible sans activation préalable de l'e-mail (verify_status).
+🛠️ Configuration Technique1. 
+1. Base de Données (SQL),2. Connexion PHP (connexion.php)
+"sql CREATE TABLE `informations` ( `id` int(11) NOT NULL AUTO_INCREMENT, `name` varchar(191) NOT NULL, `email` varchar(191) NOT NULL, `phone` varchar(20) NOT NULL, `pass` varchar(191) NOT NULL, `psw_repeat` varchar(191) NOT NULL, `verify_token` varchar(191) DEFAULT NULL, `psw_verify_token` varchar(191) DEFAULT NULL, `verify_status` tinyint(2) NOT NULL DEFAULT 0, PRIMARY KEY (`id`) ) ","php <?php $host = 'localhost'; $user = 'root'; $pass = ''; // Password dyalk $db   = 'auth'; $con = mysqli_connect($host, $user, $pass, $db); ?> "
