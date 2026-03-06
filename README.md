@@ -1,130 +1,76 @@
-# 🔐 Système d'Authentification et de Gestion d'Utilisateurs PHP
+🛡️ Système d'Authentification PHP (DevSifo)
+Un système complet et sécurisé de gestion d'utilisateurs développé en PHP. Ce projet inclut l'inscription, la connexion, la vérification d'e-mail par SMTP et la récupération de mot de passe.
 
-![PHP](https://img.shields.io/badge/PHP-777BB4?style=for-the-badge&logo=php&logoColor=white)
-![MySQL](https://img.shields.io/badge/MySQL-00000F?style=for-the-badge&logo=mysql&logoColor=white)
+✨ Fonctionnalités
+Inscription Sécurisée : Validation des données et vérification d'unicité d'e-mail.
 
-Un système d'authentification complet et sécurisé développé en PHP. Ce projet gère tout le cycle de vie d'un utilisateur, de l'inscription avec vérification par e-mail à la récupération de mot de passe sécurisée.
+Vérification d'E-mail : Envoi automatique d'un jeton (token) via PHPMailer pour activer le compte.
 
----
+Authentification Robuste : Gestion de session utilisateur et protection des pages.
 
-## 🚀 Fonctionnalités
+Réinitialisation de Mot de Passe : Système sécurisé par token envoyé par e-mail.
 
-* **📝 Inscription Utilisateur :** Collecte sécurisée des données (Nom, E-mail, Téléphone, Password).
-* **📧 Vérification d'E-mail :** Envoi automatique d'un lien de vérification via **SMTP Gmail** (PHPMailer).
-* **🔑 Connexion Sécurisée :** Vérification des identifiants et du statut d'activation du compte.
-* **🔄 Réinitialisation de Mot de Passe :** Système de "Mot de passe oublié" avec génération de **tokens** uniques.
-* **🛡️ Gestion de Session :** Protection du `Dashboard.php` (accès restreint aux membres connectés).
-* **🎨 Interface Modulaire :** Structure propre avec `header.php`, `navbar.php` et `footer.php`.
+Sécurité des Données : Utilisation de requêtes préparées (Prepared Statements) pour prévenir les injections SQL.
 
----
+Interface Modulaire : Architecture utilisant des includes pour une maintenance facilitée du Header, Navbar et Footer.
 
-## 🛠️ Technologies Utilisées
+🚀 Technologies Utilisées
+Backend : PHP 8.x
 
-* **Backend :** PHP 8.x (Mélange Procédural & POO)
-* **Base de données :** MySQL (Utilisation de `mysqli` avec **requêtes préparées**)
-* **Envoi d'e-mails :** [PHPMailer](https://github.com/PHPMailer/PHPMailer)
-* **Frontend :** HTML5, CSS3, Bootstrap (optionnel)
+Base de données : MySQL
 
----
+Bibliothèques : PHPMailer (via Composer)
 
-## 📋 Prérequis
+Frontend : HTML5, CSS3, Google Fonts
 
-1.  **Serveur Local :** XAMPP, WAMP ou Laragon.
-2.  **Composer :** Pour l'installation des dépendances.
-3.  **Compte Gmail :** Avec un "Mot de passe d'application" activé pour le SMTP.
+📂 Structure du Projet
+Plaintext
+.
+├── include/              # Composants UI (header.php, navbar.php, footer.php)
+├── vendor/               # Dépendances Composer (PHPMailer)
+├── connexion.php         # Configuration de la base de données
+├── code.php              # Logique métier (Logic Register/Login)
+├── register.php          # Formulaire d'inscription
+├── login.php             # Formulaire de connexion
+├── verify-email.php      # Script de validation du token e-mail
+├── forgot.php            # Demande de réinitialisation de mot de passe
+├── reset-password.php    # Formulaire de nouveau mot de passe
+├── dashboard.php         # Espace membre protégé
+└── index.php             # Page d'accueil
+🛠️ Installation & Configuration
+1. Base de données
+Créez une base de données nommée auth et exécutez le script SQL suivant :
 
----
-
-## 🔧 Installation et Configuration
-
-### 1. Base de Données
-Créez une DB nommée `auth` et exécutez le script SQL suivant :
-
-🔧 Installation et Configuration
-
-1️⃣ Schéma de la Base de Données
-
-Créez une base de données nommée auth et exécutez le script SQL suivant pour créer la table nécessaire :
-
-<details>
-<summary>👉 <b>Cliquez pour voir le code SQL</b></summary>
-
+SQL
 CREATE TABLE `informations` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(191) NOT NULL,
   `email` varchar(191) NOT NULL,
   `phone` varchar(20) NOT NULL,
   `pass` varchar(191) NOT NULL,
-  `psw_repeat` varchar(191) NOT NULL,
   `verify_token` varchar(191) DEFAULT NULL,
+  `verify_status` tinyint(2) NOT NULL DEFAULT 0,
   `psw_verify_token` varchar(191) DEFAULT NULL,
-  `verify_status` tinyint(2) NOT NULL DEFAULT 0 COMMENT '0=non vérifié, 1=vérifié',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id`)
-) 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+2. Dépendances
+Installez PHPMailer via Composer :
 
-
-</details>
-
-2️⃣ Connexion à la Base de Données
-
-Configurez votre fichier connexion.php avec vos accès locaux :
-
-<?php
-$host = 'localhost';
-$user = 'root';
-$pass = ''; // Votre mot de passe
-$db   = 'auth';
-
-$con = mysqli_connect($host, $user, $pass, $db);
-?>
-
-
-3️⃣ Installation de PHPMailer
-
-Utilisez Composer pour installer les dépendances nécessaires à l'envoi d'e-mails :
-
+Bash
 composer require phpmailer/phpmailer
+3. Configuration SMTP
+Modifiez les paramètres de messagerie dans code.php et forgot.php :
 
+[!WARNING]
+Sécurité SMTP : Ne poussez jamais vos identifiants réels (Username/Password) sur un dépôt public. Utilisez des variables d'environnement ou un fichier de configuration ignoré par Git.
 
-[!IMPORTANT]
-N'oubliez pas de configurer vos identifiants Gmail (App Password) dans code.php et forgot.php.
+🔒 Sécurité Implémentée
+Anti-SQL Injection : Utilisation systématique de $con->prepare() et bind_param() pour toutes les requêtes utilisateur.
 
-📂 Structure du Projet
+Tokens Uniques : Génération de jetons MD5 basés sur des fonctions aléatoires pour la vérification et le reset.
 
-Fichier/Dossier
+Protection des Sessions : Vérification du statut de validation (verify_status) avant d'autoriser l'accès au tableau de bord.
 
-Description
-
-include/
-
-Composants UI réutilisables (header, navbar, footer)
-
-vendor/
-
-Bibliothèques externes (PHPMailer)
-
-index.php
-
-Page d'accueil du projet
-
-code.php
-
-Logique backend (Traitement Inscription/Connexion)
-
-verify-email.php
-
-Script de validation du compte via token
-
-Dashboard.php
-
-Espace membre sécurisé
-
-🛡️ Sécurité Implémentée
-
-Requêtes Préparées : Protection totale contre les injections SQL via mysqli.
-
-Système de Tokens : Utilisation de jetons uniques pour la validation d'e-mail et le reset de mot de passe.
-
-Validation de Statut : Accès bloqué tant que l'e-mail n'est pas vérifié (verify_status = 1)
-
-
+🤝 Contribution
+Les contributions sont les bienvenues ! N'hésitez pas à ouvrir une Issue ou à soumettre une Pull Request
