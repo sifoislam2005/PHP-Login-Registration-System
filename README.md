@@ -1,40 +1,46 @@
-Système d'Authentification et de Gestion d'Utilisateurs PHP
-Un système d'authentification complet et sécurisé développé en PHP (mélange de procédural et d'orienté objet). Ce projet gère tout le cycle de vie d'un utilisateur, de l'inscription avec vérification par e-mail à la récupération de mot de passe via PHPMailer.
+# 🔐 Système d'Authentification et de Gestion d'Utilisateurs PHP
 
-🚀 Fonctionnalités
-Inscription Utilisateur : Collecte le nom, l'e-mail, le téléphone et le mot de passe.
+![PHP](https://img.shields.io/badge/PHP-777BB4?style=for-the-badge&logo=php&logoColor=white)
+![MySQL](https://img.shields.io/badge/MySQL-00000F?style=for-the-badge&logo=mysql&logoColor=white)
 
-Vérification d'E-mail : Envoi automatique d'un lien de vérification via SMTP Gmail pour activer le compte.
+Un système d'authentification complet et sécurisé développé en PHP. Ce projet gère tout le cycle de vie d'un utilisateur, de l'inscription avec vérification par e-mail à la récupération de mot de passe sécurisée.
 
-Connexion Sécurisée : Vérifie les identifiants et s'assure que l'e-mail est validé avant l'accès.
+---
 
-Réinitialisation de Mot de Passe : Système de "Mot de passe oublié" envoyant un jeton (token) sécurisé par e-mail.
+## 🚀 Fonctionnalités
 
-Gestion de Session : Protection du tableau de bord (Dashboard.php) accessible uniquement aux utilisateurs connectés.
+* **📝 Inscription Utilisateur :** Collecte sécurisée des données (Nom, E-mail, Téléphone, Password).
+* **📧 Vérification d'E-mail :** Envoi automatique d'un lien de vérification via **SMTP Gmail** (PHPMailer).
+* **🔑 Connexion Sécurisée :** Vérification des identifiants et du statut d'activation du compte.
+* **🔄 Réinitialisation de Mot de Passe :** Système de "Mot de passe oublié" avec génération de **tokens** uniques.
+* **🛡️ Gestion de Session :** Protection du `Dashboard.php` (accès restreint aux membres connectés).
+* **🎨 Interface Modulaire :** Structure propre avec `header.php`, `navbar.php` et `footer.php`.
 
-Interface Modulaire : Structure organisée avec des fichiers inclus pour l'en-tête, la navigation et le pied de page (header.php, navbar.php, footer.php).
+---
 
-🛠️ Technologies Utilisées
-Backend : PHP 8.x
+## 🛠️ Technologies Utilisées
 
-Base de données : MySQL (utilisation de mysqli avec requêtes préparées pour la sécurité)
+* **Backend :** PHP 8.x (Mélange Procédural & POO)
+* **Base de données :** MySQL (Utilisation de `mysqli` avec **requêtes préparées**)
+* **Envoi d'e-mails :** [PHPMailer](https://github.com/PHPMailer/PHPMailer)
+* **Frontend :** HTML5, CSS3, Bootstrap (optionnel)
 
-Envoi d'e-mails : PHPMailer (via Composer)
+---
 
-Frontend : HTML5, CSS3
+## 📋 Prérequis
 
-📋 Prérequis
-XAMPP / WAMP installé sur votre machine.
+1.  **Serveur Local :** XAMPP, WAMP ou Laragon.
+2.  **Composer :** Pour l'installation des dépendances.
+3.  **Compte Gmail :** Avec un "Mot de passe d'application" activé pour le SMTP.
 
-Composer (pour gérer les dépendances de PHPMailer).
+---
 
-Un compte Gmail avec un "Mot de passe d'application" configuré pour le SMTP.
+## 🔧 Installation et Configuration
 
-🔧 Installation et Configuration
-1. Configuration de la Base de Données
-Créez une base de données nommée auth dans phpMyAdmin et exécutez le SQL suivant pour créer la table informations :
+### 1. Base de Données
+Créez une DB nommée `auth` et exécutez le script SQL suivant :
 
-SQL
+```sql
 CREATE TABLE `informations` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(191) NOT NULL,
@@ -46,9 +52,9 @@ CREATE TABLE `informations` (
   `psw_verify_token` varchar(191) DEFAULT NULL,
   `verify_status` tinyint(2) NOT NULL DEFAULT 0 COMMENT '0=non vérifié, 1=vérifié',
   PRIMARY KEY (`id`)
-)
+) 
 2. Paramètres de Connexion
-Modifiez le fichier connexion.php avec vos accès locaux :
+Configurez votre fichier connexion.php :
 
 PHP
 $host = 'localhost';
@@ -56,34 +62,28 @@ $user = 'root';
 $pass = ''; // Votre mot de passe
 $db   = 'auth';
 3. Installation de PHPMailer
-Si le dossier vendor est absent, installez PHPMailer via votre terminal :
+Lancez la commande suivante à la racine du projet :
 
 Bash
 composer require phpmailer/phpmailer
-Note : N'oubliez pas de mettre à jour vos identifiants Gmail dans code.php et forgot.php.
+[!IMPORTANT]
+N'oubliez pas de mettre à jour vos identifiants Gmail (Email + App Password) dans code.php et forgot.php.
 
 📂 Structure du Projet
-index.php : Page d'accueil.
+Plaintext
+├── include/              # Composants UI (header, navbar, footer)
+├── vendor/               # Dépendances Composer (PHPMailer)
+├── index.php             # Page d'accueil
+├── register.php          # Inscription
+├── login.php             # Connexion
+├── code.php              # Logique Backend (Traitement POST)
+├── verify-email.php      # Validation du token e-mail
+├── forgot.php            # Demande de reset password
+├── reset-password.php    # Formulaire nouveau password
+└── Dashboard.php         # Espace membre sécurisé
+🛡️ Sécurité Implémentée
+Anti-Injection SQL : Utilisation systématique des requêtes préparées.
 
-register.php : Formulaire d'inscription.
+Tokens MD5 : Génération de jetons uniques pour la validation et la récupération.
 
-login.php : Formulaire de connexion.
-
-code.php : Logique backend (traitement POST pour l'inscription et la connexion).
-
-verify-email.php : Gestion de la validation du lien reçu par e-mail.
-
-forgot.php : Demande de réinitialisation de mot de passe.
-
-reset-password.php : Formulaire de saisie du nouveau mot de passe via token.
-
-Dashboard.php : Espace membre sécurisé.
-
-include/ : Composants UI (header.php, navbar.php, footer.php).
-
-🛡️ Sécurité implémentée
-Requêtes Préparées : Utilisées dans code.php et reset-password.php contre les injections SQL.
-
-Vérification par Token : Utilisation de jetons MD5 uniques pour la validation d'e-mail et la récupération de compte.
-
-Validation de Statut : Un utilisateur ne peut pas se connecter si son verify_status est égal à 0.
+Double Vérification : Connexion impossible sans activation préalable de l'e-mail (verify_status).
